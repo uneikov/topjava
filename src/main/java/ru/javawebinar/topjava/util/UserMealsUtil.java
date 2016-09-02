@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class UserMealsUtil {
 
-    public static List<UserMealWithExceed>  getFilteredWithExceeded3(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
         Map<LocalDate, Integer> caloriesPerDayMap = new ConcurrentHashMap<>();
 
