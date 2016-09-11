@@ -11,36 +11,36 @@
 <h2>Meal list</h2>
 <c:set var="row_color" scope="page" value="green"/>
 <div class="container" style="width: 100%">
-<table class="table table-hover" border="1" cellpadding="3" cellspacing="3" >
+    <table class="table table-hover" border="1" cellpadding="3" cellspacing="3" >
 
-    <thead>
-    <tr>
-        <th width="33%">DATE</th>
-        <th width="33%">DESCRIPTION</th>
-        <th width="33%">CALORIES</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <c:forEach var="meal" items="${requestScope.mealListWithExceeded}">
-        <%-- Choose color for the current table row --%>
-        <c:if test="${meal.exceed==true}">
-            <c:set var="row_color" value="red"/>
-        </c:if>
-        <%-- Print table row to screen --%>
-        <tr style="color: ${row_color}">
-            <td width="33%">
-                <tags:localDate date="${meal.dateTime}" pattern="dd.MM.yyy HH:mm"/>
-            </td>
-            <td width="33%">${meal.description}</td>
-            <td width="33%">${meal.calories}</td>
+        <thead>
+        <tr>
+            <th width="33%">DATE</th>
+            <th width="33%">DESCRIPTION</th>
+            <th width="33%">CALORIES</th>
         </tr>
-        <%-- Set row color to default --%>
-        <c:set var="row_color" value="green"/>
-    </c:forEach>
-    </tbody>
+        </thead>
 
-</table>
+        <tbody>
+        <c:forEach var="meal" items="${requestScope.mealListWithExceeded}">
+            <%-- Choose color for the current table row --%>
+            <c:if test="${meal.exceed==true}">
+                <c:set var="row_color" value="red"/>
+            </c:if>
+            <%-- Print table row to screen --%>
+            <tr style="color: ${row_color}">
+                <td width="33%">
+                    <tags:localDate date="${meal.dateTime}" pattern="dd.MM.yyy HH:mm"/>
+                </td>
+                <td width="33%">${meal.description}</td>
+                <td width="33%">${meal.calories}</td>
+            </tr>
+            <%-- Set row color to default --%>
+            <c:set var="row_color" value="green"/>
+        </c:forEach>
+        </tbody>
+
+    </table>
 </div>
 </body>
 </html>
