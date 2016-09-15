@@ -19,7 +19,6 @@
 </div>
 <br>
 <div class="container">
-    <br>
     <form  class="form-inline" action="meals" method="post">
         <div class="form-group">
             <label for="d">Дата:</label>
@@ -35,12 +34,12 @@
             <input type="number" class="form-control" id="cal" name="mealCal" value="mealCal">
         </div>
         <input type="hidden" name="action" value="addMeal" />
-        <button type="submit" class="btn btn-default">&nbsp;Добавить</button>
+        <button type="submit" class="btn btn-primary">&nbsp;Добавить</button>
     </form>
 </div>
 <div class="container">
     <div class="padded">
-        <a href="meals?action=mealList">
+        <a href="meals?action=listMeal">
             <span style="font-size:1.5em" class="glyphicon glyphicon-arrow-left">&nbsp;Back</span>
         </a>
     </div>
