@@ -20,6 +20,6 @@ public interface InMemoryDBDAO {
 
     void delete(Meal meal, List<Meal> table); // delete table row
 
-    Integer count(); // table size
+    Integer count(List<Meal> table); // table size
 
 }

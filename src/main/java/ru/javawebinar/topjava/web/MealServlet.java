@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.InMemoryDBDAO;
 import ru.javawebinar.topjava.dao.InMemoryDBDAOImpl;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.service.MealServiceImpl;
 import ru.javawebinar.topjava.util.DBUtil;
 
 import javax.servlet.ServletException;
@@ -20,110 +18,83 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.util.Init.id;
 import static ru.javawebinar.topjava.util.Init.mealsTable;
 
-/**
- * User: uran
- * Date: 08.09.2016
- */
-
 public class MealServlet extends HttpServlet {
 
     private static final Logger LOG = getLogger(MealServlet.class);
-    private MealService mealService = new MealServiceImpl();
     private InMemoryDBDAO inMemoryDBDAO = new InMemoryDBDAOImpl();
     private static final String HOME = "index.html";
     private static final String ADD = "/addMeal.jsp";
     private static final String LIST= "/mealList.jsp";
     private static final String EDIT = "/editMeal.jsp";
-    private int currentID = 0;
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOG.debug("forward to mealList");
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        LOG.debug("ACTION: " + (action==null ? "list" : "null"));
-        action = action==null ? "list" : action;
+        action = action == null ? "list" : action;
+        LOG.debug("forward to GET, action=" + action  );
 
-        if (action.equals("delete")){
-            LOG.debug("_delete in GET");
-            String dd =request.getParameter("date");
-            LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("date"));
-            String description = request.getParameter("desc");
-            int calories = Integer.parseInt(request.getParameter("cal"));
-            Meal meal = inMemoryDBDAO.select(mealsTable, dateTime, description, calories);
-            inMemoryDBDAO.delete(meal, mealsTable);
-            request.setAttribute("mealListWithExceeded", DBUtil.getDBContentAsList(mealsTable));
-            request.getRequestDispatcher(LIST).forward(request, response);
-        }else if(action.equals("edit")){
-            LOG.debug("_edit in GET");
-            currentID = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
-            request.setAttribute("mealDate", inMemoryDBDAO.selectRow(currentID, mealsTable).getDate());
-            request.setAttribute("mealTime", inMemoryDBDAO.selectRow(currentID, mealsTable).getTime());
-            request.setAttribute("mealType", inMemoryDBDAO.selectRow(currentID, mealsTable).getDescription());
-            request.setAttribute("mealCal", inMemoryDBDAO.selectRow(currentID, mealsTable).getCalories());
-            request.getRequestDispatcher(EDIT).forward(request, response);
-        }else if (action.equals("add")){
-            LOG.debug("_add in GET");
-            request.getRequestDispatcher(ADD).forward(request, response);
-        }else if (action.equals("list")){
-            LOG.debug("_list in GET");
-            request.setAttribute("mealListWithExceeded", DBUtil.getDBContentAsList(mealsTable));
-            //response.sendRedirect("mealList.jsp");
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
+        switch (action){
+            case "addMeal" : request.getRequestDispatcher(ADD).forward(request, response);
+            case "deleteMeal" : {
+                int id = Integer.parseInt(request.getParameter("id"));
+                Meal deletedMeal = inMemoryDBDAO.selectRow(id, mealsTable);
+                inMemoryDBDAO.delete(deletedMeal, mealsTable);
+                list(request, response);
+            }
+            case "editMeal" : {
+                int id = Integer.parseInt(request.getParameter("id"));
+                Meal editedRow = inMemoryDBDAO.selectRow(id, mealsTable);
+                request.setAttribute("meal", editedRow);
+                request.setAttribute("mealDate", editedRow.getDate());
+                request.setAttribute("mealTime", editedRow.getTime());
+                request.getRequestDispatcher(EDIT).forward(request, response);
+            }
+            case "listMeal" : list(request, response);
+            default: request.getRequestDispatcher(HOME).forward(request, response);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        LOG.debug("forward to mealList, method POST");
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
+        LOG.debug("forward to POST, action=" + action  );
 
-        if(action.equals("addMeal")){
-
-            LOG.debug("make ADD to meal List");
-            inMemoryDBDAO.insert(mealsTable, getNewMealItem(request));
-            request.setAttribute("mealListWithExceeded", DBUtil.getDBContentAsList(mealsTable));
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
-
-        }else if(action.equals("deleteMeal")){
-            LOG.debug("make delete to meal List");
-            int id = Integer.parseInt(request.getParameter("id"));
-            mealService.deleteMeal(id);
-        }else if(action.equals("editMeal")){
-            LOG.debug("make edit to meal List");
-            Meal meal = setNewMealItem(request);
-            inMemoryDBDAO.update(meal, mealsTable);
-            request.setAttribute("mealListWithExceeded", DBUtil.getDBContentAsList(mealsTable));
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
-
-        }else if (action.equals("list")){
-            LOG.debug("make listAll to meal List");
+        switch (action){
+            case "addMeal" : {
+                inMemoryDBDAO.insert(mealsTable, _getNewMealItem(request, "new"));
+                list(request, response);
+            }
+            case "deleteMeal" : {/* nothing enters here now*/}
+            case "editMeal" : {
+                Meal meal = _getNewMealItem(request, "old");
+                inMemoryDBDAO.update(meal, mealsTable);
+                list(request, response);
+            }
+            default: request.getRequestDispatcher(HOME).forward(request, response);
         }
     }
 
-    private Meal getNewMealItem(HttpServletRequest request){
-
+    private Meal _getNewMealItem(HttpServletRequest request, String action){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
-        Object mealDate = request.getParameter("mealDate");
-        Object mealTime = request.getParameter("mealTime");
-        LocalDateTime localDateTime = LocalDateTime.parse(mealDate.toString().concat(mealTime.toString()), formatter);
-        String mealType = request.getParameter("mealType");
-        Integer mealCal = Integer.parseInt(request.getParameter("mealCal"));
-        return new Meal(id.getAndIncrement(), localDateTime, mealType, mealCal);
-    }
-
-    private Meal setNewMealItem(HttpServletRequest request){
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
-        //int id = Integer.parseInt(request.getParameter("id"));
         Object mealDate = request.getParameter("mealDate");
         Object mealTime = request.getParameter("mealTime");
         LocalDateTime localDateTime = LocalDateTime.parse(mealDate.toString().concat(mealTime.toString()), formatter);
         String description = request.getParameter("mealType");
         Integer calories = Integer.parseInt(request.getParameter("mealCal"));
-        return new Meal(currentID, localDateTime, description, calories);
+        switch (action){
+            case "new" : return new Meal(id.getAndIncrement(), localDateTime, description, calories);
+            case "old" : {
+                int id = Integer.parseInt(request.getParameter("id"));
+                return new Meal(id, localDateTime, description, calories);
+            }
+            default: return null;
+        }
+    }
+
+    private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        request.setAttribute("mealListWithExceeded", DBUtil.getDBContentAsList(mealsTable));
+        request.getRequestDispatcher(LIST).forward(request, response);
     }
 }

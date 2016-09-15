@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="css/bootstrap-extensions.css"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap-extensions.css"/>
 
 </head>
 <body>
+<%--
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -31,7 +32,15 @@
         </ul>
     </div>
 </nav>
-<br><br><br><br>
+--%>
+
+<div class="container">
+    <div class="padded">
+    <a href="index.html">
+        <span style="font-size:1.5em" class="glyphicon glyphicon-home">&nbsp;Home</span>
+    </a>
+    </div>
+</div>
 
 <div class="container">
     <div class="col-md-12">
@@ -49,12 +58,7 @@
 
         <tbody>
         <c:forEach var="meal" items="${requestScope.mealListWithExceeded}">
-            <%-- Choose color for the current table row --%>
-            <c:if test="${meal.exceed==true}">
-                <c:set var="row_color" value="red"/>
-            </c:if>
-            <%-- Print table row to screen --%>
-            <tr style="color: ${row_color}">
+            <tr style="color: ${meal.exceed ? "red" : "green"}">
                 <td>
                     <tags:localDate date="${meal.dateTime}" pattern="dd.MM.yyy HH:mm"/>
                 </td>
@@ -62,23 +66,21 @@
                 <td>${meal.calories}</td>
                 <td width="15%">
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a href="${pageContext.request.contextPath}/meals?action=edit&id=${meal.id}">
+                    <a href="${pageContext.request.contextPath}/meals?action=editMeal&id=${meal.id}">
                         <i class="glyphicon glyphicon-pencil"></i>
                     </a>
                     <span>&nbsp;&nbsp;&nbsp;</span>
-                    <a href="${pageContext.request.contextPath}/meals?action=delete&date=${meal.dateTime}&desc=${meal.description}&cal=${meal.calories}">
+                    <a href="${pageContext.request.contextPath}/meals?action=deleteMeal&id=${meal.id}">
                         <i class="glyphicon glyphicon-trash"></i>
                     </a>
                 </td>
             </tr>
-            <%-- Set row color to default --%>
-            <c:set var="row_color" value="green"/>
         </c:forEach>
         <tr>
             <td></td><td></td><td></td>
             <td>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="meals?action=add"><i class="glyphicon glyphicon-plus"></i></a>
+                <a href="meals?action=addMeal"><i class="glyphicon glyphicon-plus"></i></a>
             </td>
         </tr>
         </tbody>
@@ -88,14 +90,3 @@
 </div>
 </body>
 </html>
-<%--
-  <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both"/>
-  <fmt:formatDate value="${parsedDate}"  pattern="dd.MM.yyy HH:mm" />
-
-  <c:forEach var="meal_ex" items="${requestScope.mealListWithExceeded}">
-      <c:if test="${meal.dateTime==meal_ex.dateTime && meal_ex.exceed==true}">
-          <c:set var="row_color" value="red"/>
-      </c:if>
-  </c:forEach>
-
---%>

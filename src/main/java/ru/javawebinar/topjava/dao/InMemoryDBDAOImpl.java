@@ -20,13 +20,16 @@ public class InMemoryDBDAOImpl implements InMemoryDBDAO{
     }
 
     @Override
-    public void update(Meal meal, List<Meal> table) {
-        table.set(meal.getId(), meal);
+    public void update(Meal newMeal, List<Meal> table) {
+        int id= newMeal.getId();
+        Meal oldMeal = selectRow(id, table);
+        int row = table.indexOf(oldMeal);
+        table.set(row, newMeal);
     }
 
     @Override
     public Meal selectRow(int id, List<Meal> table) {
-        return table.get(id);
+        return table.stream().filter(meal -> meal.getId() == id).findFirst().orElse(null);
     }
 
     @Override
@@ -37,18 +40,14 @@ public class InMemoryDBDAOImpl implements InMemoryDBDAO{
                 meal.getCalories() == calories)).findFirst().orElse(null);
     }
 
-    public Meal select(int id, List<Meal> table){
-        return table.stream().filter(meal -> meal.getId()==id).findFirst().orElse(null);
-    }
-
     @Override
     public void delete(Meal meal, List<Meal> table) {
         table.remove(meal);
     }
 
     @Override
-    public Integer count() {
-        return null;
+    public Integer count(List<Meal> table) {
+        return table.size();
     }
 
 }
