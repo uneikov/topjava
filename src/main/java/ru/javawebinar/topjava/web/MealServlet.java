@@ -31,7 +31,7 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        action = action == null ? "list" : action;
+        action = action == null ? "listMeal" : action;
         LOG.debug("forward to GET, action=" + action  );
 
         switch (action){
