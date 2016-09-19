@@ -2,10 +2,12 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
-import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.model.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,7 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,22 +28,29 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
-    private MealRepository repository;
+    //private MealRepository repository;
+    private MealRestController repository;
+    private List<MealWithExceed> mealWithExceeds;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        repository = new InMemoryMealRepositoryImpl();
+        //repository = new InMemoryMealRepositoryImpl();
+        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
+            repository = appCtx.getBean(MealRestController.class); // подмена !!!
+        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
+        LOG.info("POST " + id);
 
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.valueOf(request.getParameter("calories")));
+                Integer.valueOf(request.getParameter("calories"))
+        );
 
         LOG.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         repository.save(meal);
@@ -47,11 +59,13 @@ public class MealServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        String userId = request.getParameter("id");
+        LOG.info("userId " + userId + " action " + action);
 
         if (action == null) {
             LOG.info("getAll");
-            request.setAttribute("mealList",
-                    MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+            mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+            request.setAttribute("mealList", mealWithExceeds);
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
 
         } else if ("delete".equals(action)) {
@@ -61,16 +75,62 @@ public class MealServlet extends HttpServlet {
             response.sendRedirect("meals");
 
         } else if ("create".equals(action) || "update".equals(action)) {
+            LOG.info("ACTION!!! - " + action);
             final Meal meal = action.equals("create") ?
                     new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
                     repository.get(getId(request));
             request.setAttribute("meal", meal);
             request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
+
+        } else if ("filter".equals(action)){
+            request.setAttribute("mealList", doFilter(request));
+            //response.sendRedirect("meals");
+            request.getRequestDispatcher("mealList.jsp").forward(request, response);
         }
     }
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.valueOf(paramId);
+    }
+
+    private List<MealWithExceed> doFilter(HttpServletRequest request){
+        /*
+        LOG.info(
+                "FD " + request.getParameter("fromDate")
+                        + " TD " + request.getParameter("toDate")
+                        + " FT " + request.getParameter("fromTime")
+                        + " TT " + request.getParameter("toTime")
+        );
+        */
+        String _fromDate = request.getParameter("fromDate");
+        String _toDate = request.getParameter("toDate");
+        String _fromTime = request.getParameter("fromTime");
+        String _toTime = request.getParameter("toTime");
+        boolean noDate = _fromDate.equals("") || _fromDate.equals("");
+        boolean noTime = _fromTime.equals("") || _toTime.equals("");
+
+        List<MealWithExceed> result;
+
+        if (noDate && noTime){
+            return mealWithExceeds;
+        }else if (noTime) {
+            LocalDate fromDate = LocalDate.parse(_fromDate);
+            LocalDate toDate = LocalDate.parse(_toDate);
+            result = MealsUtil.getFilteredByDate(mealWithExceeds, fromDate, toDate);
+        }else if (noDate){
+            LocalTime fromTime = LocalTime.parse(_fromTime);
+            LocalTime toTime = LocalTime.parse(_toTime);
+            result = MealsUtil.getFilteredByTime(mealWithExceeds, fromTime, toTime);
+        }else {
+            LocalDate fromDate = LocalDate.parse(_fromDate);
+            LocalDate toDate = LocalDate.parse(_toDate);
+            LocalTime fromTime = LocalTime.parse(_fromTime);
+            LocalTime toTime = LocalTime.parse(_toTime);
+            result = MealsUtil.getFilteredByDate(mealWithExceeds, fromDate, toDate);
+            result = MealsUtil.getFilteredByTime(result, fromTime, toTime);
+        }
+
+        return result;
     }
 }

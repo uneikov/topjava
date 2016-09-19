@@ -40,6 +40,16 @@ public class User extends NamedEntity {
         this.roles = roles;
     }
 
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
     public String getEmail() {
         return email;
     }

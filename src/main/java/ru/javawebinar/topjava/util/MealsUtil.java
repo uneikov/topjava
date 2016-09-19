@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealWithExceed;
+import ru.javawebinar.topjava.model.to.MealWithExceed;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -67,4 +67,17 @@ public class MealsUtil {
     public static MealWithExceed createWithExceed(Meal meal, boolean exceeded) {
         return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
+
+    public static List<MealWithExceed> getFilteredByDate(List<MealWithExceed> mealWithExceeds, LocalDate startDate, LocalDate endDate) {
+        return mealWithExceeds.stream()
+                .filter(meal -> DateUtil.isBetween(meal.getDateTime().toLocalDate(), startDate, endDate))
+                .collect(Collectors.toList());
+    }
+
+    public static List<MealWithExceed> getFilteredByTime(List<MealWithExceed> mealWithExceeds, LocalTime startTime, LocalTime endTime) {
+        return mealWithExceeds.stream()
+                .filter(meal -> TimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.toList());
+    }
+
 }
