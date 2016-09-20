@@ -14,8 +14,8 @@ public class AuthorizedUser {
         return id;
     }
 
-    public static void setId(int _id){
-        id = _id;
+    public static void setId(int userId){
+        id = userId;
     }
 
     public static int getCaloriesPerDay() {
