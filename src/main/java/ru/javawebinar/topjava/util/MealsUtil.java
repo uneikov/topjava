@@ -70,7 +70,7 @@ public class MealsUtil {
 
     public static List<MealWithExceed> getFiltered(List<MealWithExceed> mealWithExceeds, String _fromDate, String _toDate, String _fromTime, String _toTime){
 
-        boolean noDate = _fromDate.isEmpty() || _fromDate.isEmpty();
+        boolean noDate = _fromDate.isEmpty() || _toDate.isEmpty();
         boolean noTime = _fromTime.isEmpty() || _toTime.isEmpty();
 
         List<MealWithExceed> result;
