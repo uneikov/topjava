@@ -22,7 +22,7 @@ public class Main {
         //userService.save(new User(1,"usr", "mail", "1234", Role.ROLE_USER));
         //System.out.println(userService.getAll());
         MealRepository mealRepository = new InMemoryMealRepositoryImpl();
-        List<Meal> mealList= new ArrayList<>(mealRepository.getAll());
+        List<Meal> mealList= new ArrayList<>(mealRepository.getAll(AuthorizedUser.id()));
         System.out.println(mealList.stream().map(Meal::getId).collect(Collectors.toList()));
     }
 }

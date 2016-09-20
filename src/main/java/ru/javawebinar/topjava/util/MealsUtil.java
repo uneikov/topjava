@@ -68,13 +68,42 @@ public class MealsUtil {
         return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 
-    public static List<MealWithExceed> getFilteredByDate(List<MealWithExceed> mealWithExceeds, LocalDate startDate, LocalDate endDate) {
+    public static List<MealWithExceed> getFiltered(List<MealWithExceed> mealWithExceeds, String _fromDate, String _toDate, String _fromTime, String _toTime){
+
+        boolean noDate = _fromDate.isEmpty() || _fromDate.isEmpty();
+        boolean noTime = _fromTime.isEmpty() || _toTime.isEmpty();
+
+        List<MealWithExceed> result;
+
+        if (noDate && noTime){
+            return mealWithExceeds;
+        }else if (noTime) {
+            LocalDate fromDate = LocalDate.parse(_fromDate);
+            LocalDate toDate = LocalDate.parse(_toDate);
+            result = getFilteredByDate(mealWithExceeds, fromDate, toDate);
+        }else if (noDate){
+            LocalTime fromTime = LocalTime.parse(_fromTime);
+            LocalTime toTime = LocalTime.parse(_toTime);
+            result = getFilteredByTime(mealWithExceeds, fromTime, toTime);
+        }else {
+            LocalDate fromDate = LocalDate.parse(_fromDate);
+            LocalDate toDate = LocalDate.parse(_toDate);
+            LocalTime fromTime = LocalTime.parse(_fromTime);
+            LocalTime toTime = LocalTime.parse(_toTime);
+            result = getFilteredByDate(mealWithExceeds, fromDate, toDate);
+            result = getFilteredByTime(result, fromTime, toTime);
+        }
+
+        return result;
+    }
+
+    private static List<MealWithExceed> getFilteredByDate(List<MealWithExceed> mealWithExceeds, LocalDate startDate, LocalDate endDate) {
         return mealWithExceeds.stream()
                 .filter(meal -> DateUtil.isBetween(meal.getDateTime().toLocalDate(), startDate, endDate))
                 .collect(Collectors.toList());
     }
 
-    public static List<MealWithExceed> getFilteredByTime(List<MealWithExceed> mealWithExceeds, LocalTime startTime, LocalTime endTime) {
+    private static List<MealWithExceed> getFilteredByTime(List<MealWithExceed> mealWithExceeds, LocalTime startTime, LocalTime endTime) {
         return mealWithExceeds.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime))
                 .collect(Collectors.toList());

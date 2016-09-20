@@ -7,25 +7,28 @@
 <body>
 <h2>Проект "<a href="https://github.com/JavaWebinar/topjava08" target="_blank">Java Enterprise (Topjava)"</a></h2>
 <hr>
-
-<form action="meals" method="get">
-    <label for="userId1">User ID:</label>
-    <select id="userId1" name="id">
-        <option value="1">1</option>
-        <option value="2">2</option>
-    </select>
-    <input type="submit" value="Авторизоваться и вывести список MEALS">
-</form>
-
+<br>
 <form action="users" method="get">
     <label for="userId2">User ID:</label>
-    <select id="userId2" name="id">
+    <select id="userId2" name="userId">
+        <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
     </select>
-    <input type="submit" value="Авторизоваться и вывести список USERS">
+    <input type="hidden" name="auth" value="1">
+    <input type="submit" value="Авторизоваться и вывести список MEALS">
 </form>
-
+<br>
+<form action="meals" method="get">
+    <label for="userId1">User ID:</label>
+    <select id="userId1" name="userId">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
+    <input type="hidden" name="auth" value="1">
+    <input type="submit" value="Вывести список MEALS для любого ID">
+</form>
 </body>
 </html>
 <!--

@@ -35,8 +35,14 @@ public class MealRestController {
         return service.get(id);
     }
 
-    public Collection<Meal> getAll() {
+    public Collection<Meal> getAll(int authId) {
         LOG.info("get All");
-        return service.getAll();
+        return service.getAll(authId);
+    }
+
+    public void setUserId(int id){ service.setUserId(id);};
+
+    public int getUserId() {
+        return service.getUserId();
     }
 }

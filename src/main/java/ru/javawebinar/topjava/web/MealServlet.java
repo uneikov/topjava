@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.to.MealWithExceed;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -58,13 +60,16 @@ public class MealServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String action = request.getParameter("action");
-        String userId = request.getParameter("id");
-        LOG.info("userId " + userId + " action " + action);
+        LOG.info("action " + action);
+        // userId - user ID произвольного вида - не обязательно совпадает с авторизованным
+        String _userId = request.getParameter("userId");
+        if (_userId != null ) repository.setUserId(Integer.parseInt(_userId));
 
         if (action == null) {
             LOG.info("getAll");
-            mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+            mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
             request.setAttribute("mealList", mealWithExceeds);
             request.getRequestDispatcher("/mealList.jsp").forward(request, response);
 
@@ -95,42 +100,10 @@ public class MealServlet extends HttpServlet {
     }
 
     private List<MealWithExceed> doFilter(HttpServletRequest request){
-        /*
-        LOG.info(
-                "FD " + request.getParameter("fromDate")
-                        + " TD " + request.getParameter("toDate")
-                        + " FT " + request.getParameter("fromTime")
-                        + " TT " + request.getParameter("toTime")
-        );
-        */
-        String _fromDate = request.getParameter("fromDate");
-        String _toDate = request.getParameter("toDate");
-        String _fromTime = request.getParameter("fromTime");
-        String _toTime = request.getParameter("toTime");
-        boolean noDate = _fromDate.equals("") || _fromDate.equals("");
-        boolean noTime = _fromTime.equals("") || _toTime.equals("");
-
-        List<MealWithExceed> result;
-
-        if (noDate && noTime){
-            return mealWithExceeds;
-        }else if (noTime) {
-            LocalDate fromDate = LocalDate.parse(_fromDate);
-            LocalDate toDate = LocalDate.parse(_toDate);
-            result = MealsUtil.getFilteredByDate(mealWithExceeds, fromDate, toDate);
-        }else if (noDate){
-            LocalTime fromTime = LocalTime.parse(_fromTime);
-            LocalTime toTime = LocalTime.parse(_toTime);
-            result = MealsUtil.getFilteredByTime(mealWithExceeds, fromTime, toTime);
-        }else {
-            LocalDate fromDate = LocalDate.parse(_fromDate);
-            LocalDate toDate = LocalDate.parse(_toDate);
-            LocalTime fromTime = LocalTime.parse(_fromTime);
-            LocalTime toTime = LocalTime.parse(_toTime);
-            result = MealsUtil.getFilteredByDate(mealWithExceeds, fromDate, toDate);
-            result = MealsUtil.getFilteredByTime(result, fromTime, toTime);
-        }
-
-        return result;
+        String fromDate = request.getParameter("fromDate");
+        String toDate = request.getParameter("toDate");
+        String fromTime = request.getParameter("fromTime");
+        String toTime = request.getParameter("toTime");
+        return MealsUtil.getFiltered(mealWithExceeds, fromDate, toDate, fromTime, toTime);
     }
 }
