@@ -9,7 +9,7 @@ import java.util.Collection;
  * 06.03.2015.
  */
 public interface MealRepository {
-    Meal save(Meal meal);
+    Meal save(int userId, Meal meal);
 
     boolean delete(int id);
 
@@ -17,7 +17,7 @@ public interface MealRepository {
 
     Collection<Meal> getAll(int authId);
 
-    void setUserId(int id);
+    /*void setUserId(int id);
 
-    int getUserId();
+    int getUserId();*/
 }

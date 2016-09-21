@@ -17,17 +17,16 @@ import java.util.Collection;
 public class MealRestController {
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private MealService service;
+    @Autowired private MealService service;
 
     public Meal save(Meal meal) {
         LOG.info("save " + meal);
         return service.save(meal);
     }
 
-    public boolean delete(int id) {
+    public void delete(int id) {
         LOG.info("delete" + id);
-        return service.delete(id);
+        service.delete(id);
     }
 
     public Meal get(int id) {
@@ -40,9 +39,11 @@ public class MealRestController {
         return service.getAll(authId);
     }
 
-    public void setUserId(int id){ service.setUserId(id);};
-
-    public int getUserId() {
-        return service.getUserId();
+    public void setUserId(int id) {
+        service.setUserId(id);
     }
+
+    /*public int getUserId() {
+        return service.getUserId();
+    }*/
 }

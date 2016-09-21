@@ -26,9 +26,9 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) {
         LOG.info("delete " + id);
-        //boolean result = repository.containsKey(id);
-        //if (result) repository.remove(id);
-        //return result;
+        /*boolean result = repository.containsKey(id);
+        if (result) repository.remove(id);
+        return result;*/
         return repository.remove(id) != null;
     }
 
@@ -46,7 +46,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public User get(int id) {
         LOG.info("get " + id);
         return repository.getOrDefault(id, null);
-        //return null;
     }
 
     @Override
@@ -69,7 +68,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
                 .filter(user -> user.getEmail().equals(email))
                 .findFirst()
                 .orElse(null);
-        //return null;
     }
 
 }

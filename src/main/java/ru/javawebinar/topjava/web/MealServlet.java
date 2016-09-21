@@ -7,19 +7,17 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.to.MealWithExceed;
-import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +31,7 @@ public class MealServlet extends HttpServlet {
     //private MealRepository repository;
     private MealRestController repository;
     private List<MealWithExceed> mealWithExceeds;
+    //private ConfigurableApplicationContext applicationContext;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -41,6 +40,8 @@ public class MealServlet extends HttpServlet {
         try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
             repository = appCtx.getBean(MealRestController.class); // подмена !!!
         }
+        /*applicationContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        repository = applicationContext.getBean(MealRestController.class); // подмена !!!*/
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,12 +61,22 @@ public class MealServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //ServletContext mealServletContext = request.getSession().getServletContext();
 
         String action = request.getParameter("action");
         LOG.info("action " + action);
         // userId - user ID произвольного вида - не обязательно совпадает с авторизованным
-        String _userId = request.getParameter("userId");
-        if (_userId != null ) repository.setUserId(Integer.parseInt(_userId));
+        String userIdFromAllOtherPages = request.getParameter("userId");
+        String userIdFromAuthPage =(String) request.getSession().getAttribute("userId");
+
+        if (userIdFromAllOtherPages != null )
+            repository.setUserId(Integer.parseInt(userIdFromAllOtherPages));
+        else if (userIdFromAuthPage != null)
+            repository.setUserId(Integer.parseInt(userIdFromAuthPage));
+        else
+            repository.setUserId(0); // demo version
+
+        //LOG.info("NAME ", applicationContext.getBean(MealRestController.class));
 
         if (action == null) {
             LOG.info("getAll");

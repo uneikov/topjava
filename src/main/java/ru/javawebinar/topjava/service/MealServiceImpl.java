@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.exception.ExceptionUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.Collection;
@@ -18,42 +19,66 @@ public class MealServiceImpl implements MealService {
 
     @Autowired
     private MealRepository repository;
+    private int userId;
 
     @Override
     public Meal save(Meal meal) {
-        if (repository.getUserId() == AuthorizedUser.id())
-            return repository.save(meal);
+        if (userId == AuthorizedUser.id())
+            return repository.save(userId, meal);
         else
             throw new NotFoundException("Unauthorized operation.");
     }
 
     @Override
-    public boolean delete(int id) {
-        if (repository.getUserId() == AuthorizedUser.id())
-            return repository.delete(id);
+    public void delete(int id) {
+        if (userId == AuthorizedUser.id())
+            ExceptionUtil.checkNotFoundWithId(repository.delete(id), id);
         else
-            throw new NotFoundException("Unauthorized operation.");
+            ExceptionUtil.checkNotFound(false, "Unauthorized operation.");
     }
 
     @Override
     public Meal get(int id) {
-        if (repository.getUserId() == AuthorizedUser.id())  return repository.get(id);
-        else throw new NotFoundException("Unauthorized operation.");
+        if (userId == AuthorizedUser.id())
+            return ExceptionUtil.checkNotFound(repository.get(id), "id=" + id);
+        else
+            ExceptionUtil.checkNotFound(false, "Unauthorized operation.");
+        return null;
     }
+
+    /*@Override // id - id юзера, попавшего в сервлет
+    public boolean delete(int id) {
+        boolean result;
+        if (userId == AuthorizedUser.id())
+            result = repository.delete(id);
+        else
+            throw new NotFoundException("Unauthorized operation.");
+        if (!result) throw new NotFoundException("Not found");
+        return result;
+    }*/
+
+    /*@Override // id - id юзера, попавшего в сервлет
+    public Meal get(int id) {
+        if (userId == AuthorizedUser.id())  return repository.get(id);
+        else throw new NotFoundException("Unauthorized operation.");
+    }*/
 
     @Override
     public Collection<Meal> getAll(int authId) {
-        if (repository.getUserId() == authId)
-            return repository.getAll(authId);
+        if (userId == authId)
+            return repository.getAll(userId);
         else
             throw new NotFoundException("Unauthorized operation.");
     }
 
     @Override
-    public void setUserId(int id){ repository.setUserId(id);}
-
-    @Override
-    public int getUserId() {
-        return repository.getUserId();
+    public void setUserId(int id){
+        this.userId = id;
+        /*repository.setUserId(id);*/
     }
+
+    /*@Override
+    public int getUserId() {
+        return userId;
+    }*/
 }

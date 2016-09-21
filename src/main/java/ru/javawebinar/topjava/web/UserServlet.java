@@ -21,9 +21,23 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOG.debug("forward to userList");
-        String _userId = request.getParameter("userId");
+      /*  String _userId = request.getParameter("userId");
         //int userId = _userId != null ? Integer.parseInt(_userId) : 0;
         AuthorizedUser.setId(_userId != null ? Integer.parseInt(_userId) : 0);
-        request.getRequestDispatcher("meals").forward(request, response);
+        request.getRequestDispatcher("meals").forward(request, response);*/
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        LOG.debug("forward to userList");
+
+        String userIdFromAuthPage = request.getParameter("userId");
+        String pass = request.getParameter("password");
+        String redirect = "1234".equals(pass) ? "meals" : "index.html";
+        AuthorizedUser.setId(Integer.parseInt(userIdFromAuthPage));
+        //AuthorizedUser.setId(userIdFromAuthPage != null ? Integer.parseInt(userIdFromAuthPage) : 0);
+        request.getSession().setAttribute("userId", userIdFromAuthPage);
+        response.sendRedirect(redirect);
+        //response.sendRedirect("meals");
     }
 }

@@ -11,7 +11,7 @@ import java.util.Collection;
 public interface MealService {
     Meal save(Meal meal);
 
-    boolean delete(int id);
+    void delete(int id);
 
     Meal get(int id);
 
@@ -19,5 +19,5 @@ public interface MealService {
 
     void setUserId(int id);
 
-    int getUserId();
+   /* int getUserId();*/
 }

@@ -21,14 +21,14 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     private Map<Integer, UserMeal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
-    private int userId;
+    //private int userId;
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(meal -> this.save(0, meal));
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         }
@@ -36,12 +36,12 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         return meal;
     }
 
-    @Override
+    @Override // id - номер строки в репо
     public boolean delete(int id) {
         return repository.remove(id) != null;
     }
 
-    @Override
+    @Override // id - номер строки в репо
     public Meal get(int id) {
         UserMeal userMeal = repository.getOrDefault(id, null);
         return userMeal != null ? userMeal.getMeal() : null;
@@ -59,7 +59,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    /*@Override
     public void setUserId(int id){
         this.userId = id;
     }
@@ -67,7 +67,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public int getUserId() {
         return userId;
-    }
+    }*/
 
 /*private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);

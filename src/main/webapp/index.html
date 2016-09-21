@@ -5,20 +5,23 @@
     <title>Java Enterprise (Topjava)</title>
 </head>
 <body>
-<h2>Проект "<a href="https://github.com/JavaWebinar/topjava08" target="_blank">Java Enterprise (Topjava)"</a></h2>
+<h2>Проект "<a href="https://github.com/JavaWebinar/topjava08" target="_self">Java Enterprise (Topjava)"</a></h2>
 <hr>
 <br>
-<form action="users" method="get">
+<p id="badpass" style="color: red"></p>
+<form name="loginform" action="users" onSubmit="return validateForm();" method="post">
     <label for="userId2">User ID:</label>
     <select id="userId2" name="userId">
         <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
     </select>
-    <input type="hidden" name="auth" value="1">
-    <input type="submit" value="Авторизоваться и вывести список MEALS">
+    <input type="password" name="password" value="">
+    <input type="submit" value="Login">
 </form>
 <br>
+<p id="password_hint" style="color: green">Use "1234" as password</p>
+<!--
 <form action="meals" method="get">
     <label for="userId1">User ID:</label>
     <select id="userId1" name="userId">
@@ -29,6 +32,21 @@
     <input type="hidden" name="auth" value="1">
     <input type="submit" value="Вывести список MEALS для любого ID">
 </form>
+-->
+<script>
+    function validateForm() {
+
+        var pw = document.loginform.password.value;
+        var password = "1234";
+        if (pw == password) {
+            return true;
+        }
+        else {
+            document.getElementById('badpass').innerHTML='Login was unsuccessful, please check your password';
+            return false;
+        }
+    }
+</script>
 </body>
 </html>
 <!--
