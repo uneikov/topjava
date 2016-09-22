@@ -31,11 +31,12 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOG.debug("forward to userList");
 
+        String password = request.getParameter("password");
+        String redirect = "1234".equals(password) ? "meals" : "index.html";
+
         String userIdFromAuthPage = request.getParameter("userId");
-        String pass = request.getParameter("password");
-        String redirect = "1234".equals(pass) ? "meals" : "index.html";
-        //AuthorizedUser.setId(Integer.parseInt(userIdFromAuthPage));
-        AuthorizedUser.setId(userIdFromAuthPage != null ? Integer.parseInt(userIdFromAuthPage) : 0);
+        AuthorizedUser.setId(Integer.valueOf(userIdFromAuthPage));
+
         request.getSession().setAttribute("userId", userIdFromAuthPage);
         response.sendRedirect(redirect);
     }

@@ -62,7 +62,7 @@ public class MealServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         LOG.info("action " + action);
-        repository.setUserId(AuthorizedUser.id());
+        repository.setUserId(AuthorizedUser.id()); //??
 
         if (action == null) {
             LOG.info("getAll");
