@@ -22,7 +22,7 @@ public class MealServiceImpl implements MealService {
     private int userId;
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) { //? userID всегда как у AuthorizedUser ?
         if (userId == AuthorizedUser.id())
             return repository.save(userId, meal);
         else
@@ -31,7 +31,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void delete(int id) {
-        if (userId == AuthorizedUser.id())
+        if (repository.getUserId(id) == AuthorizedUser.id())
             ExceptionUtil.checkNotFoundWithId(repository.delete(id), id);
         else
             ExceptionUtil.checkNotFound(false, "Unauthorized operation.");
@@ -39,29 +39,12 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Meal get(int id) {
-        if (userId == AuthorizedUser.id())
+        if (repository.getUserId(id) == AuthorizedUser.id())
             return ExceptionUtil.checkNotFound(repository.get(id), "id=" + id);
         else
             ExceptionUtil.checkNotFound(false, "Unauthorized operation.");
         return null;
     }
-
-    /*@Override // id - id юзера, попавшего в сервлет
-    public boolean delete(int id) {
-        boolean result;
-        if (userId == AuthorizedUser.id())
-            result = repository.delete(id);
-        else
-            throw new NotFoundException("Unauthorized operation.");
-        if (!result) throw new NotFoundException("Not found");
-        return result;
-    }*/
-
-    /*@Override // id - id юзера, попавшего в сервлет
-    public Meal get(int id) {
-        if (userId == AuthorizedUser.id())  return repository.get(id);
-        else throw new NotFoundException("Unauthorized operation.");
-    }*/
 
     @Override
     public Collection<Meal> getAll(int authId) {
@@ -74,11 +57,5 @@ public class MealServiceImpl implements MealService {
     @Override
     public void setUserId(int id){
         this.userId = id;
-        /*repository.setUserId(id);*/
     }
-
-    /*@Override
-    public int getUserId() {
-        return userId;
-    }*/
 }

@@ -19,9 +19,9 @@ public class MealRestController {
 
     @Autowired private MealService service;
 
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) {
         LOG.info("save " + meal);
-        return service.save(meal);
+        return service.save(userId, meal);
     }
 
     public void delete(int id) {

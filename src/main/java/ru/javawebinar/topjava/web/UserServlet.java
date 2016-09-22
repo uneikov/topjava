@@ -34,10 +34,9 @@ public class UserServlet extends HttpServlet {
         String userIdFromAuthPage = request.getParameter("userId");
         String pass = request.getParameter("password");
         String redirect = "1234".equals(pass) ? "meals" : "index.html";
-        AuthorizedUser.setId(Integer.parseInt(userIdFromAuthPage));
-        //AuthorizedUser.setId(userIdFromAuthPage != null ? Integer.parseInt(userIdFromAuthPage) : 0);
+        //AuthorizedUser.setId(Integer.parseInt(userIdFromAuthPage));
+        AuthorizedUser.setId(userIdFromAuthPage != null ? Integer.parseInt(userIdFromAuthPage) : 0);
         request.getSession().setAttribute("userId", userIdFromAuthPage);
         response.sendRedirect(redirect);
-        //response.sendRedirect("meals");
     }
 }

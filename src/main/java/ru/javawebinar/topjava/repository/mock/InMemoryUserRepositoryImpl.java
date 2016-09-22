@@ -56,6 +56,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
                 .stream()
                 .sorted((user1, user2) -> user1.getName().compareToIgnoreCase(user2.getName()))
                 .collect(Collectors.toList());
+        // .sorted(Comparator.comparing(User::getName))
         //return Collections.emptyList();
     }
 

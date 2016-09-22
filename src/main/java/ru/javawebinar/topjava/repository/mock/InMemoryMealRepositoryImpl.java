@@ -21,7 +21,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     private Map<Integer, UserMeal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
-    //private int userId;
 
     {
         MealsUtil.MEALS.forEach(meal -> this.save(0, meal));
@@ -59,54 +58,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
                 .collect(Collectors.toList());
     }
 
-    /*@Override
-    public void setUserId(int id){
-        this.userId = id;
-    }
-
-    @Override
-    public int getUserId() {
-        return userId;
-    }*/
-
-/*private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
-    private AtomicInteger counter = new AtomicInteger(0);
-
-    {
-        MealsUtil.MEALS.forEach(this::save);
-    }
-
-    @Override
-    public Meal save(Meal meal) {
-        if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-        }
-        repository.put(meal.getId(), meal);
-        return meal;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        //boolean result = repository.containsKey(id);
-        //if (result) repository.remove(id);
-        //return result;
-        return repository.remove(id) != null;
-    }
-
-    @Override
-    public Meal get(int id) {
-        return repository.getOrDefault(id, null);
-    }
-
-    @Override
-    public Collection<Meal> getAll() {
-        return repository
-                .values()
-                .stream()
-                .sorted((meal1, meal2) -> meal2.getDateTime().compareTo(meal1.getDateTime()))
-                .collect(Collectors.toList());
-    }*/
-
-
+     @Override
+     public int getUserId(int id){
+         return repository.get(id).getUserId();
+     }
 }
 
