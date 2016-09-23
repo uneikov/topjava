@@ -70,9 +70,9 @@ public class MealServlet extends HttpServlet {
         String loggedUser = (String)request.getSession().getAttribute("userId");
         if (loggedUser == null) response.sendRedirect("index.html"); // см. коммент выше
         else {
-            if (Integer.valueOf(loggedUser) != AuthorizedUser.id())
+            if (Integer.valueOf(loggedUser) != AuthorizedUser.id()){
                 AuthorizedUser.setId(Integer.valueOf(loggedUser)); // см. коммент выше
-
+            }
             if (action == null) {
                 LOG.info("getAll");
                 //mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
