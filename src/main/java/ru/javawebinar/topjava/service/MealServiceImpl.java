@@ -19,7 +19,7 @@ public class MealServiceImpl implements MealService {
 
     @Autowired
     private MealRepository repository;
-    private int userId;
+    /*private int userId;*/
 
     @Override
     public Meal save(int userId, Meal meal) { //? userID всегда как у AuthorizedUser ?
@@ -47,15 +47,15 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public Collection<Meal> getAll(int authId) {
-        if (userId == authId)
+    public Collection<Meal> getAll(int userId) {
+        if (userId == AuthorizedUser.id())
             return repository.getAll(userId);
         else
             throw new NotFoundException("Unauthorized operation.");
     }
 
-    @Override
+    /*@Override
     public void setUserId(int id){
         this.userId = id;
-    }
+    }*/
 }

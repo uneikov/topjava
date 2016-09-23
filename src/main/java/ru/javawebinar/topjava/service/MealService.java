@@ -17,5 +17,5 @@ public interface MealService {
 
     Collection<Meal> getAll(int authId);
 
-    void setUserId(int id);
+   /* void setUserId(int id);*/
 }

@@ -29,7 +29,7 @@ public class MealServlet extends HttpServlet {
 
     //private MealRepository repository;
     private MealRestController repository;
-    private List<MealWithExceed> mealWithExceeds;
+   // private List<MealWithExceed> mealWithExceeds;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -56,37 +56,50 @@ public class MealServlet extends HttpServlet {
         repository.save(AuthorizedUser.id(), meal);
         response.sendRedirect("meals");
     }
+    /* repository.setUserId(AuthorizedUser.id()); */
+    //заходишь одним юзером в одном браузере, выбираешь еду, затем заходиш в др. браузере другим юзером,
+    // потом переходишь в первый браузер - обновляешь страницу и видишь еду второго юзера...
+    //дело не в проверках - не храни юзера приложении, совсем
+    //http://www.javatpoint.com/servlet-http-session-login-and-logout-example
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String action = request.getParameter("action");
         LOG.info("action " + action);
-        repository.setUserId(AuthorizedUser.id()); //??
+        String loggedUser = (String)request.getSession().getAttribute("userId");
+        if (loggedUser == null) response.sendRedirect("index.html"); // см. коммент выше
+        else {
+            if (Integer.valueOf(loggedUser) != AuthorizedUser.id())
+                AuthorizedUser.setId(Integer.valueOf(loggedUser)); // см. коммент выше
 
-        if (action == null) {
-            LOG.info("getAll");
-            mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
-            request.setAttribute("mealList", mealWithExceeds);
-            request.getRequestDispatcher("/mealList.jsp").forward(request, response);
+            if (action == null) {
+                LOG.info("getAll");
+                //mealWithExceeds =  MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+                request.setAttribute(
+                        "mealList",
+                        MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY)
+                );
+                request.getRequestDispatcher("/mealList.jsp").forward(request, response);
 
-        } else if ("delete".equals(action)) {
-            int id = getId(request);
-            LOG.info("Delete {}", id);
-            repository.delete(id);
-            response.sendRedirect("meals");
+            } else if ("delete".equals(action)) {
+                int id = getId(request);
+                LOG.info("Delete {}", id);
+                repository.delete(id);
+                response.sendRedirect("meals");
 
-        } else if ("create".equals(action) || "update".equals(action)) {
-            LOG.info("ACTION!!! - " + action);
-            final Meal meal = action.equals("create") ?
-                    new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
-                    repository.get(getId(request));
-            request.setAttribute("meal", meal);
-            request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
+            } else if ("create".equals(action) || "update".equals(action)) {
+                LOG.info("ACTION!!! - " + action);
+                final Meal meal = action.equals("create") ?
+                        new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 1000) :
+                        repository.get(getId(request));
+                request.setAttribute("meal", meal);
+                request.getRequestDispatcher("mealEdit.jsp").forward(request, response);
 
-        } else if ("filter".equals(action)){
-            request.setAttribute("mealList", doFilter(request));
-            request.getRequestDispatcher("mealList.jsp").forward(request, response);
+            } else if ("filter".equals(action)) {
+                request.setAttribute("mealList", doFilter(request));
+                request.getRequestDispatcher("mealList.jsp").forward(request, response);
+            }
         }
     }
 
@@ -100,6 +113,9 @@ public class MealServlet extends HttpServlet {
         String toDate = request.getParameter("toDate");
         String fromTime = request.getParameter("fromTime");
         String toTime = request.getParameter("toTime");
-        return MealsUtil.getFiltered(mealWithExceeds, fromDate, toDate, fromTime, toTime);
+        return MealsUtil.getFiltered(
+                MealsUtil.getWithExceeded(repository.getAll(AuthorizedUser.id()),
+                        MealsUtil.DEFAULT_CALORIES_PER_DAY), fromDate, toDate, fromTime, toTime
+        );
     }
 }

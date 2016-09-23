@@ -34,14 +34,14 @@ public class MealRestController {
         return service.get(id);
     }
 
-    public Collection<Meal> getAll(int authId) {
+    public Collection<Meal> getAll(int userId) {
         LOG.info("get All");
-        return service.getAll(authId);
+        return service.getAll(userId);
     }
 
-    public void setUserId(int id) {
+   /* public void setUserId(int id) {
         service.setUserId(id);
-    }
+    }*/
 
     /*public int getUserId() {
         return service.getUserId();
