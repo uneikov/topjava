@@ -42,6 +42,7 @@ public class MealServlet extends HttpServlet {
         super.destroy();
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -76,6 +77,7 @@ public class MealServlet extends HttpServlet {
         return value;
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
