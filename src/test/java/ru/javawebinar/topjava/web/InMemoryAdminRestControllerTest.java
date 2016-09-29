@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.UserTestData;
@@ -18,6 +19,8 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 public class InMemoryAdminRestControllerTest {
 
     private static ConfigurableApplicationContext appCtx;
+
+    @Autowired
     private static AdminRestController controller;
 
     @BeforeClass
@@ -41,7 +44,7 @@ public class InMemoryAdminRestControllerTest {
         repository.save(ADMIN);
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test //(expected = NotFoundException.class)//
     public void testDelete() throws Exception {
         controller.delete(UserTestData.USER_ID);
         Collection<User> users = controller.getAll();

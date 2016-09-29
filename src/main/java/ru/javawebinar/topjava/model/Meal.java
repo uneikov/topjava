@@ -9,7 +9,6 @@ import java.time.LocalTime;
  * 11.01.2015.
  */
 public class Meal extends BaseEntity {
-   /* private Integer userId;*/
 
     private  LocalDateTime dateTime;
 
@@ -18,6 +17,10 @@ public class Meal extends BaseEntity {
     private  int calories;
 
     public Meal(){}
+
+    public Meal (Meal meal){
+        this (meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
+    }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
@@ -30,8 +33,6 @@ public class Meal extends BaseEntity {
         this.calories = calories;
     }
 
-    //-------------------------------------------------------
-
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
@@ -43,11 +44,6 @@ public class Meal extends BaseEntity {
     public void setCalories(int calories) {
         this.calories = calories;
     }
-
-    //-------------------------------------------------------
-    /*public void setId(Integer id) {
-        this.userId = id;
-    }*/
 
     public LocalDateTime getDateTime() {
         return dateTime;
