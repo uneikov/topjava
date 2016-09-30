@@ -51,6 +51,7 @@ public class MealServiceImpl implements MealService {
     @Override
     public Meal save(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
-        return repository.save(meal, userId);
+        return ExceptionUtil.checkNotFound(repository.save(meal, userId), "Unauthorized operation");
+        /*return repository.save(meal, userId);*/
     }
 }

@@ -48,6 +48,12 @@ public class MealServiceTest {
         MATCHER.assertCollectionEquals(Arrays.asList(created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), service.getAll(USER_ID));
     }
 
+    @Test (expected = NotFoundException.class) // added by me
+    public void testNotFoundSave() throws Exception {
+        Meal created = getCreated();
+        service.save(created, ADMIN_ID);
+    }
+
     @Test
     public void testGet() throws Exception {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);

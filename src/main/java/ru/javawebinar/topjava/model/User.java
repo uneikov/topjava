@@ -26,8 +26,8 @@ import java.util.Set;
 public class User extends NamedEntity {
 
     public static final String DELETE = "User.delete";
-    public static final String ALL_SORTED = "User.getAllSorted";
     public static final String BY_EMAIL = "User.getByEmail";
+    public static final String ALL_SORTED = "User.getAllSorted";
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
