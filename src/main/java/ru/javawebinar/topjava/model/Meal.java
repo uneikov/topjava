@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import static org.hsqldb.lib.tar.TarHeaderField.name;
+
 /**
  * GKislin
  * 11.01.2015.
@@ -29,7 +31,7 @@ public class Meal extends BaseEntity {
     public static final String GET_BETWEEN = "Meal.getByEmail";
     public static final String ALL_SORTED = "Meal.getAllSorted";
 
-    @Column (name = "date_time", nullable = false)/*, unique = true*/
+    @Column (name = "date_time", nullable = false, unique = true)
     private LocalDateTime dateTime;
 
     @Column (name = "description", nullable = false)
@@ -41,6 +43,7 @@ public class Meal extends BaseEntity {
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)/*, cascade = CascadeType.PERSIST*/
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     public Meal() {

@@ -30,17 +30,15 @@ public class JpaMealRepositoryImpl implements MealRepository {
 
         if (meal.isNew()) {
             if (userId == AuthorizedUser.id()) { // можно ли использовать AuthUser?
-                meal.setUser(em.getReference(User.class, userId));
+                meal.setUser(em.find(User.class, userId));
                 em.persist(meal);
             }else { // Unauthorized operation
                 return null;
             }
         } else {
-           /* Meal mealRef = em.getReference(Meal.class, meal.getId());*/
-            int mealUserId = em.getReference(Meal.class, meal.getId()).getUser().getId();
-
-            if (mealUserId == userId) {
-                meal.setUser(em.getReference(User.class, userId));
+            User user = em.find(Meal.class, meal.getId()).getUser();
+            if (user.getId() == userId) {
+                meal.setUser(user);
                 return em.merge(meal);
             }
             else { // Unauthorized operation
