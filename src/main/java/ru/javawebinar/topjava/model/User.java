@@ -32,18 +32,18 @@ public class User extends NamedEntity {
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotEmpty
-    protected String email;
+    private String email;
 
     @Column(name = "password", nullable = false)
     @NotEmpty
     @Length(min = 5)
-    protected String password;
+    private String password;
 
     @Column(name = "enabled", nullable = false)
-    protected boolean enabled = true;
+    private boolean enabled = true;
 
     @Column(name = "registered", columnDefinition = "timestamp default now()")
-    protected Date registered = new Date();
+    private Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -53,7 +53,7 @@ public class User extends NamedEntity {
 
     @Column(name = "calories_per_day", columnDefinition = "default 2000")
     @Digits(fraction = 0, integer = 4)
-    protected int caloriesPerDay = MealsUtil.DEFAULT_CALORIES_PER_DAY;
+    private int caloriesPerDay = MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
     public User() {
     }
