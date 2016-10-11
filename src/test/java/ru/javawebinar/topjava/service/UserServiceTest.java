@@ -22,7 +22,7 @@ abstract public class UserServiceTest extends BaseServiceTest{
     @Before
     public void setUp() throws Exception {
         service.evictCache();
-        testName = getClass().getSuperclass().getSimpleName();
+       /* testName = getClass().getSuperclass().getSimpleName();*/
     }
         
     @Test

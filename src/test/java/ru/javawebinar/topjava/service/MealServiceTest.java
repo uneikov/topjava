@@ -1,7 +1,9 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -11,16 +13,20 @@ import java.time.Month;
 import java.util.Arrays;
 
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 abstract public class MealServiceTest extends BaseServiceTest{
 
     @Autowired
     protected MealService service;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
-        testName = getClass().getSuperclass().getSimpleName();
+       /* testName = getClass().getSuperclass().getSimpleName();*/
     }
 
     @Test
@@ -86,7 +92,11 @@ abstract public class MealServiceTest extends BaseServiceTest{
     @Test
     public void testGetBetween() throws Exception {
         MEAL_MATCHER.assertCollectionEquals(Arrays.asList(MEAL3, MEAL2, MEAL1),
-                service.getBetweenDates(LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 30), USER_ID));
+                service.getBetweenDates(
+                        LocalDate.of(2015, Month.MAY, 30),
+                        LocalDate.of(2015, Month.MAY, 30),
+                        USER_ID)
+        );
     }
 
 }

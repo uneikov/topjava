@@ -1,22 +1,10 @@
 package ru.javawebinar.topjava.service;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.Stopwatch;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.concurrent.TimeUnit;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -24,10 +12,15 @@ import java.util.concurrent.TimeUnit;
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-abstract public class BaseServiceTest implements EnvironmentAware{
-    private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
+abstract public class BaseServiceTest extends AbstractPrintTotalResultsTest{
+  /*  private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
 
-    static Environment env;
+    private static Environment env;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        env = environment;
+    }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,6 +54,5 @@ abstract public class BaseServiceTest implements EnvironmentAware{
                     TimeUnit.NANOSECONDS.toMillis(nanos)
             ));
         }
-    };
-
+    };*/
 }

@@ -24,6 +24,7 @@ import java.util.Objects;
  * User: gkislin
  * Date: 19.08.2014
  */
+
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
@@ -33,7 +34,12 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        // set active profiles
+        System.setProperty("spring.profiles.active", "postgres, datajpa");
+        springContext = new ClassPathXmlApplicationContext(
+                "spring/spring-app.xml",
+                "spring/spring-db.xml"
+        );
         mealController = springContext.getBean(MealRestController.class);
     }
 
@@ -43,6 +49,7 @@ public class MealServlet extends HttpServlet {
         super.destroy();
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
@@ -77,6 +84,7 @@ public class MealServlet extends HttpServlet {
         return value;
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
