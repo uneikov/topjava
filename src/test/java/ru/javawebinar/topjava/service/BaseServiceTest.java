@@ -13,6 +13,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 abstract public class BaseServiceTest extends AbstractPrintTotalResultsTest{
+    /*
+    private static int TESTS_COUNT = getTestsClassCount();
+
+    private static int getTestsClassCount(){
+        String classpath = "ru.javawebinar.topjava.service";
+        Path start = Paths.get(classpath);
+        int maxDepth = 5;
+        int count = 0;
+        try (Stream<Path> stream = Files.find(start, maxDepth, (path, attr) ->
+                String.valueOf(path).startsWith(classpath + ".Test"))) {
+            count = (int)stream.count();
+        }catch (Exception ex) {}
+        return count;
+    }*/
+
   /*  private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
 
     private static Environment env;

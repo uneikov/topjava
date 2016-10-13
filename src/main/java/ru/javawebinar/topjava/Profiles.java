@@ -13,7 +13,7 @@ public class Profiles {
             DATAJPA = "datajpa";
 
     public static final String ACTIVE_DB = POSTGRES;
-    /*public static final String ACTIVE_PP = DATAJPA;
-    public static final String ACTIVE_DB_AND_PP = ACTIVE_DB + " & " + ACTIVE_PP;
-*/
+    public static final String ACTIVE_PP = DATAJPA;
+   /* public static final String ACTIVE_DB_AND_PP = ACTIVE_DB + " & " + ACTIVE_PP;*/
+
 }

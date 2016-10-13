@@ -31,13 +31,11 @@ import java.util.List;
 public class JdbcMealRepositoryImpl implements MealRepository, EnvironmentAware {
 
     private static final RowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
-    private Environment env;
     private boolean isHsql;
 
     @Override
     public void setEnvironment(Environment environment) {
-        env = environment;
-        isHsql = env.getActiveProfiles()[0].equals(Profiles.HSQLDB);
+        isHsql = environment.getActiveProfiles()[0].equals(Profiles.HSQLDB);
     }
 
     @Autowired
@@ -104,7 +102,6 @@ public class JdbcMealRepositoryImpl implements MealRepository, EnvironmentAware 
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-       /* boolean isHsql = env.getActiveProfiles()[0].equals(Profiles.HSQLDB);*/
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time BETWEEN  ? AND ? ORDER BY date_time DESC",
                 ROW_MAPPER,

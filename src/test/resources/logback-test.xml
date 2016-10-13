@@ -29,6 +29,7 @@
 
     <logger name="ru.javawebinar.topjava.service.AbstractPrintTotalResultsTest" level="debug" additivity="false">
         <appender-ref ref="testResults"/>
+        <appender-ref ref="console"/>
     </logger>
 
 </configuration>
