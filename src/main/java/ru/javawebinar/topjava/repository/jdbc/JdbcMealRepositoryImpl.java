@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
@@ -47,6 +48,7 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
 
     @Repository
     @Profile(Profiles.POSTGRES)
+    @Transactional(readOnly = true)
     public static class Java8JdbcMealRepositoryImpl extends JdbcMealRepositoryImpl<LocalDateTime> {
         @Override
         protected LocalDateTime toDbDateTime(LocalDateTime ldt) {
@@ -56,8 +58,8 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
 
     @Repository
     @Profile(Profiles.HSQLDB)
+    @Transactional(readOnly = true)
     public static class TimestampJdbcMealRepositoryImpl extends JdbcMealRepositoryImpl<Timestamp> {
-
         @Override
         protected Timestamp toDbDateTime(LocalDateTime ldt) {
             return Timestamp.valueOf(ldt);
@@ -65,6 +67,7 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
     }
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
@@ -89,6 +92,7 @@ public abstract class JdbcMealRepositoryImpl<T> implements MealRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id, int userId) {
         return jdbcTemplate.update("DELETE FROM meals WHERE id=? AND user_id=?", id, userId) != 0;
     }

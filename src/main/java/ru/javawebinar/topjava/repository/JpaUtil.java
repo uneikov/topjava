@@ -5,11 +5,14 @@ import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
+/*@Component("jpaUtil")*/
 public class JpaUtil {
 
     @PersistenceContext
     private EntityManager em;
+
+    /*public JpaUtil() {
+    }*/
 
     public void clear2ndLevelHibernateCache() {
         Session s = (Session) em.getDelegate();

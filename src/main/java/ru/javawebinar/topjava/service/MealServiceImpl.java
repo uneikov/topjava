@@ -58,6 +58,7 @@ public class MealServiceImpl implements MealService {
 //    private UserRepository userRepository;
 
 //    @Transactional
+    @Override
     public Meal getWithUser(int id, int userId) {
 //        Meal meal = get(id, userId);
 //        meal.setUser(userRepository.get(userId));

@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Meal;
@@ -18,10 +19,18 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Autowired
     protected MealService service;
 
+    @Before
+    public void setUp() {
+        testName = getClass().getSuperclass().getSimpleName();
+    }
+
     @Test
     public void testDelete() throws Exception {
         service.delete(MEAL1_ID, USER_ID);
-        MATCHER.assertCollectionEquals(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2), service.getAll(USER_ID));
+        MATCHER.assertCollectionEquals(
+                Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2),
+                service.getAll(USER_ID)
+        );
     }
 
     @Test
@@ -34,7 +43,10 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     public void testSave() throws Exception {
         Meal created = getCreated();
         service.save(created, USER_ID);
-        MATCHER.assertCollectionEquals(Arrays.asList(created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), service.getAll(USER_ID));
+        MATCHER.assertCollectionEquals(Arrays.asList(
+                created, MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1),
+                service.getAll(USER_ID)
+        );
     }
 
     @Test

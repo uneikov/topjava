@@ -2,16 +2,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
+<%@ taglib prefix="fun" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <title>Meal list</title>
-    <link rel="stylesheet" href="css/style.css">
+    <c:set var="url">${pageContext.request.requestURL}</c:set>
+    <base href="${fun:substring(url, 0, fun:length(url) - fun:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
+    <link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
 <section>
-    <h2><a href="${pageContext.request.contextPath}/">Home</a></h2>
-    <h3>Meal list</h3>
-    <form method="post" action="meals?action=filter">
+    <h2><a href="${pageContext.request.contextPath}/"><fmt:message key="app.home"/></a></h2>
+    <h3><fmt:message key="meals.title"/></h3>
+    <form method="post" action="meals/filter">
         <dl>
             <dt>From Date:</dt>
             <dd><input type="date" name="startDate" value="${startDate}"></dd>
@@ -28,17 +31,17 @@
             <dt>To Time:</dt>
             <dd><input type="time" name="endTime" value="${endTime}"></dd>
         </dl>
-        <button type="submit">Filter</button>
+        <button type="submit"><fmt:message key="filter.select"/></button>
     </form>
     <hr>
-    <a href="meals?action=create">Add Meal</a>
+    <a href="meals/create"><fmt:message key="meal.create"/></a>
     <hr>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Calories</th>
+            <th><fmt:message key="meal.date"/></th>
+            <th><fmt:message key="meal.desc"/></th>
+            <th><fmt:message key="meal.cal"/></th>
             <th></th>
             <th></th>
         </tr>
@@ -53,8 +56,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
-                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+                <td><a href="meals/update/${meal.id}"><fmt:message key="meal.update"/></a></td>
+                <td><a href="meals/delete/${meal.id}"><fmt:message key="meal.delete"/></a></td>
             </tr>
         </c:forEach>
     </table>
