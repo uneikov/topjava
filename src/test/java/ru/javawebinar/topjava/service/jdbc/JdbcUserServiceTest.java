@@ -1,28 +1,13 @@
 package ru.javawebinar.topjava.service.jdbc;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
-import ru.javawebinar.topjava.model.Role;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-
 import static ru.javawebinar.topjava.Profiles.JDBC;
-import static ru.javawebinar.topjava.UserTestData.*;
 
 @ActiveProfiles(JDBC)
 public class JdbcUserServiceTest extends AbstractUserServiceTest {
-    @Before
-    public void setUpJpa() throws Exception {
-        service.evictCache();
-        testName = getClass().getSuperclass().getSimpleName();
-    }
-
+    /*
     @Override
     @Test
     public void testGetAll() throws Exception {
@@ -47,5 +32,5 @@ public class JdbcUserServiceTest extends AbstractUserServiceTest {
         newUser = service.get(created.getId());
         Assert.assertEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());
         //MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());
-    }
+    }*/
 }

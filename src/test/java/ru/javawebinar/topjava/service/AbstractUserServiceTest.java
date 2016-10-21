@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,9 +19,16 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     protected UserService service;
 
+    @Before
+    public void setUp() throws Exception {
+        service.evictCache();
+        testName = getClass().getSuperclass().getSimpleName();
+    }
+
     @Test
     public void testSave() throws Exception {
-        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
+        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false,
+                Collections.singleton(Role.ROLE_USER));
         User created = service.save(newUser);
         newUser = service.get(created.getId());
         MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());

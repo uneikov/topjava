@@ -125,7 +125,7 @@ public class User extends NamedEntity {
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.roles = roles;//EnumSet.copyOf(roles);
     }
 
     public String getPassword() {

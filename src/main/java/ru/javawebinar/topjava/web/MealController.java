@@ -19,41 +19,42 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 @Controller
+@RequestMapping(value="/meals")
 public class MealController {
     private static final Logger LOG = LoggerFactory.getLogger(MealController.class);
 
     @Autowired
     private MealRestController mealController;
 
-    @RequestMapping(value="/meals", method=RequestMethod.GET)
+    @RequestMapping(method=RequestMethod.GET)
     public String getAll(HttpServletRequest request) {
         LOG.info("getAll");
         request.setAttribute("meals", mealController.getAll());
         return "meals";
     }
 
-    @RequestMapping(value="/meals/delete/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/delete/{id}", method=RequestMethod.GET)
     public String deleteMeal(@PathVariable Integer id) {
         LOG.info("Delete meal {}", id);
         mealController.delete(id);
         return "redirect:/meals";
     }
 
-    @RequestMapping(value="/meals/create", method=RequestMethod.GET)
+    @RequestMapping(value="/create", method=RequestMethod.GET)
     public String createMeal(Model model) {
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "", 1000);
         model.addAttribute("meal", meal);
         return "meal";
     }
 
-    @RequestMapping(value="/meals/update/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/update/{id}", method=RequestMethod.GET)
     public String updateMeal(Model model, @PathVariable Integer id) {
         final Meal meal = mealController.get(id);
         model.addAttribute("meal", meal);
         return "meal";
     }
 
-    @RequestMapping(value="/meals/create_or_update", method= RequestMethod.POST)
+    @RequestMapping(value="/create_or_update", method= RequestMethod.POST)
     public String addMeal(HttpServletRequest request) {
         final Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("dateTime")),
@@ -70,7 +71,7 @@ public class MealController {
         return "redirect:/meals";
     }
 
-    @RequestMapping(value="/meals/filter", method=RequestMethod.POST)
+    @RequestMapping(value="/filter", method=RequestMethod.POST)
     public String filterMeal(HttpServletRequest request) {
         LocalDate startDate = TimeUtil.parseLocalDate(resetParam("startDate", request));
         LocalDate endDate = TimeUtil.parseLocalDate(resetParam("endDate", request));

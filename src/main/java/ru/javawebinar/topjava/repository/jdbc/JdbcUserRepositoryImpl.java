@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.lang.String.valueOf;
+
 /**
  * User: gkislin
  * Date: 26.08.2014
@@ -38,11 +40,8 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     private SimpleJdbcInsert insertUser;
 
-   /* private DataSourceTransactionManager txManager;*/
-
     @Autowired
     public JdbcUserRepositoryImpl(DataSource dataSource) {
-    /*    this.txManager = new DataSourceTransactionManager(dataSource);*/
         this.insertUser = new SimpleJdbcInsert(dataSource)
                 .withTableName("USERS")
                 .usingGeneratedKeyColumns("id");
@@ -80,26 +79,41 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Override
     public User get(int id) {
         User user = DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id));
-        if (user != null) user.setRoles(getRoles(user.getId()));
-        return user == null ? null : user;
+        return user == null ? null : setRoles(user);
     }
 
     @Override
     public User getByEmail(String email) {
         User user = DataAccessUtils.singleResult(jdbcTemplate.query("SELECT * FROM users WHERE email=?", ROW_MAPPER, email));
-        user.setRoles(getRoles(user.getId()));
-        return user;
+        return setRoles(user);
     }
 
     @Override
     public List<User> getAll() {
-        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        List<User> allUsers = jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
+        allUsers.forEach(this::setRoles);
+        return allUsers;
     }
 
-    private Set<Role> getRoles(int id){
-        List<Map<String, Object>> userRoles = jdbcTemplate.queryForList("SELECT * FROM user_roles WHERE user_id=?", id);
-        return userRoles.stream()
-                .map(roleMap -> Role.valueOf((String)roleMap.get("role")))
+    private User setRoles(User user){
+        List<Map<String, Object>> userRoles =
+                jdbcTemplate.queryForList("SELECT role FROM user_roles WHERE user_id=?", user.getId());
+        Set<Role> roles = userRoles.stream()
+                .map(roleMap -> Role.valueOf(valueOf(roleMap.get("role"))))
                 .collect(Collectors.toSet());
+        user.setRoles(roles);
+        return user;
     }
+
+    /*public void deleteRoles(User user){
+        jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
+    }*/
+
+    /*public User setRoles(User user){
+        List<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles WHERE user_id=?",
+                        (rs, rowNum) -> Role.valueOf(rs.getString("role")),
+                        user.getId());
+        user.setRoles(new HashSet<>(roles));
+        return user;
+    }*/
 }
