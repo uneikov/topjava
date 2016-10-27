@@ -3,6 +3,8 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.matcher.ModelMatcher;
 import ru.javawebinar.topjava.model.Meal;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,12 @@ public class MealTestData {
     public static final int MEAL1_ID = START_SEQ + 2;
     public static final int ADMIN_MEAL_ID = START_SEQ + 8;
 
-    public static final Meal MEAL1 = new Meal(MEAL1_ID, of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
+    public static final LocalDate START_DATE = LocalDate.of(2015, 5, 30);
+    public static final LocalDate END_DATE = LocalDate.of(2015, 5, 30);
+    public static final LocalTime START_TIME = LocalTime.of(10, 0);
+    public static final LocalTime END_TIME = LocalTime.of(16, 30);
+
+    public static final Meal MEAL1 = new Meal(MEAL1_ID,     of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500);
     public static final Meal MEAL2 = new Meal(MEAL1_ID + 1, of(2015, Month.MAY, 30, 13, 0), "Обед", 1000);
     public static final Meal MEAL3 = new Meal(MEAL1_ID + 2, of(2015, Month.MAY, 30, 20, 0), "Ужин", 500);
     public static final Meal MEAL4 = new Meal(MEAL1_ID + 3, of(2015, Month.MAY, 31, 10, 0), "Завтрак", 500);

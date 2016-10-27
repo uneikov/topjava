@@ -8,5 +8,5 @@
     <title><fmt:message key="app.title"/></title>
     <c:set var="url">${pageContext.request.requestURL}</c:set>
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
-    <link rel="stylesheet" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
 </head>

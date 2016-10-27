@@ -26,8 +26,7 @@
                 <td><c:out value="${user.name}"/></td>
                 <td><a href="mailto:${user.email}">${user.email}</a></td>
                 <td>${user.roles}</td>
-                <td><%=user.isEnabled()%>
-                </td>
+                <td><%=user.isEnabled()%></td>
                 <td><fmt:formatDate value="${user.registered}" pattern="dd-MMMM-yyyy"/></td>
             </tr>
         </c:forEach>

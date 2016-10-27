@@ -8,7 +8,6 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h3><fmt:message key="meals.title"/></h3>
-
     <form method="post" action="meals/filter">
         <dl>
             <dt><fmt:message key="meals.startDate"/>:</dt>
