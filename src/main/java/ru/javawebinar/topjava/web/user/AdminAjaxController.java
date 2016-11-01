@@ -14,11 +14,13 @@ import java.util.List;
 @RequestMapping("/ajax/admin/users")
 public class AdminAjaxController extends AbstractUserController {
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {
         return super.getAll();
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
@@ -36,5 +38,19 @@ public class AdminAjaxController extends AbstractUserController {
         } else {
             super.update(user, id);
         }
+    }
+/*
+    @PostMapping("/{id}")
+    public void changeStatus(@RequestParam("id") Integer id){
+        User user = super.get(id);
+        user.setEnabled(true);
+        super.update(user, id);
+    }*/
+
+    @PutMapping(value = "/{id}")
+    public void update(@PathVariable("id") int id) {
+        User user = super.get(id);
+        user.setEnabled(!user.isEnabled());
+        super.update(user, id);
     }
 }

@@ -7,9 +7,7 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <div class="jumbotron">
-    <div class="container">
-        <p/>
-
+    <div class="container"><p></p>
         <form method="post" action="users">
             <fmt:message key="app.login"/>: <select name="userId">
             <option value="100000" selected>User</option>

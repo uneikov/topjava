@@ -1,9 +1,11 @@
 function makeEditable() {
     $('.delete').click(function () {
+        debugger;
         deleteRow($(this).attr("id"));
     });
 
     $('#detailsForm').submit(function () {
+        debugger;
         save();
         return false;
     });
@@ -19,6 +21,7 @@ function add() {
 }
 
 function deleteRow(id) {
+    debugger;
     $.ajax({
         url: ajaxUrl + id,
         type: 'DELETE',
@@ -41,6 +44,7 @@ function updateTable() {
 
 function save() {
     var form = $('#detailsForm');
+    debugger;
     $.ajax({
         type: "POST",
         url: ajaxUrl,
@@ -53,6 +57,16 @@ function save() {
     });
 }
 
+function changeStatus(id) {
+    $.ajax({
+        url: ajaxUrl + id,
+        type: 'PUT',
+        success: function () {
+            //updateTable();
+            successNoty('Updated');
+        }
+    });
+}
 var failedNote;
 
 function closeNoty() {
