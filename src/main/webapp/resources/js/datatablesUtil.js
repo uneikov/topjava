@@ -1,11 +1,9 @@
 function makeEditable() {
     $('.delete').click(function () {
-        debugger;
         deleteRow($(this).attr("id"));
     });
 
     $('#detailsForm').submit(function () {
-        debugger;
         save();
         return false;
     });
@@ -21,7 +19,6 @@ function add() {
 }
 
 function deleteRow(id) {
-    debugger;
     $.ajax({
         url: ajaxUrl + id,
         type: 'DELETE',
@@ -32,7 +29,7 @@ function deleteRow(id) {
     });
 }
 
-function updateTable() {
+/*function updateTable() {
     $.get(ajaxUrl, function (data) {
         datatableApi.fnClearTable();
         $.each(data, function (key, item) {
@@ -40,10 +37,17 @@ function updateTable() {
         });
         datatableApi.fnDraw();
     });
+}*/
+
+function updateTable() {
+    $.get(ajaxUrl, function (data) {
+        datatableApi.clear().rows.add(data).draw();
+    });
 }
 
 function save() {
     var form = $('#detailsForm');
+    console.log( form.serialize() );
     debugger;
     $.ajax({
         type: "POST",
@@ -62,11 +66,12 @@ function changeStatus(id) {
         url: ajaxUrl + id,
         type: 'PUT',
         success: function () {
-            //updateTable();
+            updateTable();
             successNoty('Updated');
         }
     });
 }
+
 var failedNote;
 
 function closeNoty() {

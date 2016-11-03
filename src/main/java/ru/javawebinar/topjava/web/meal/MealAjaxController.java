@@ -28,11 +28,12 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
-                               @RequestParam("description") String description,
-                               @RequestParam("calories") Integer calories) {
-
+    public void createOrUpdate(
+            @RequestParam("id") Integer id,
+            @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
+            @RequestParam("description") String description,
+            @RequestParam("calories") Integer calories)
+    {
         Meal meal = new Meal(id, dateTime, description, calories);
         if (meal.isNew()) {
             super.create(meal);
@@ -40,6 +41,18 @@ public class MealAjaxController extends AbstractMealController {
             super.update(meal, id);
         }
     }
+
+    @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MealWithExceed> getBetween(
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(value = "endDate", required = false)@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(value = "startTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam(value = "endTime", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime)
+    {
+        final List<MealWithExceed> between = super.getBetween(startDate, startTime, endDate, endTime);
+        return super.getBetween(startDate, startTime, endDate, endTime);
+    }
+
     //------------------------------------------- ????? ----------------------------------------
     @Override
     public Meal get(int id) {
