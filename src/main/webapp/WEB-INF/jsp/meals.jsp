@@ -61,7 +61,7 @@
                     </thead>
                     <c:forEach items="${meals}" var="meal">
                         <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealWithExceed"/>
-                        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+                        <tr class="${meal.exceed ? 'exceeded' : 'normal'}" id="${meal.exceed ? 'exceeded' : 'normal'}">
                             <td>${fn:formatDateTime(meal.dateTime)}</td>
                             <td>${meal.description}</td>
                             <td>${meal.calories}</td>
@@ -141,15 +141,51 @@
         });
         return false
     }
+
+    function rowColor(row) {
+        return row.exceed ? 'exceeded' : 'normal';
+    }
+
     // $(document).ready(function () {
     $(function () {
         datatableApi = $('#datatable').DataTable({
-            paging: false,
+
+            ajax: {
+                url: ajaxUrl,
+                type: 'GET',
+                dataSrc: ""
+            },
+            paging: true,
             info: false,
             columns: [
-                {data: "dateTime"},
-                {data: "description"},
-                {data: "calories"},
+                {
+                    data: "dateTime",
+                    render: function (data, type, row) {
+                        if (type == 'display') {
+                            return '<span class="' + rowColor(row) +
+                                    '">'+data.substring(0,10)+ "  " + data.substring(11,16)+'</span>';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "description",
+                    render:  function (data, type, row) {
+                        if (type == 'display') {
+                            return '<span class="' + rowColor(row) + '">'+data+'</span>';
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: "calories",
+                    render:  function (data, type, row) {
+                        if (type == 'display') {
+                            return '<span class="' + rowColor(row) + '">'+data+'</span>';
+                        }
+                        return data;
+                    }
+                },
                 {defaultContent: "Edit",   orderable: false},
                 {defaultContent: "Delete", orderable: false}
             ],
