@@ -70,7 +70,7 @@
                             </td>
                             <td>${meal.description}</td>
                             <td>${meal.calories}</td>
-                            <td><a class="btn btn-xs btn-primary"><fmt:message key="common.update"/></a></td>
+                            <td><a class="btn btn-xs btn-primary" onclick="updateRow(${meal.id})"><fmt:message key="common.update"/></a></td>
                             <td><a class="btn btn-xs btn-danger" onclick="deleteRow(${meal.id})"><fmt:message key="common.delete"/></a></td>
                         </tr>
                     </c:forEach>
@@ -128,56 +128,18 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    var i18n = [];
+    <c:forEach var='key' items='<%=new String[]{"common.update","common.delete","common.deleted","common.saved","common.enabled","common.disabled","common.failed"}%>'>
+    i18n['${key}'] = '<fmt:message key="${key}"/>';
+    </c:forEach>
+    var edit_title ='<fmt:message key="users.edit"/>';
+</script>
 <script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="webjars/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="webjars/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="webjars/noty/2.3.8/js/noty/packaged/jquery.noty.packaged.min.js"></script>
 <script type="text/javascript" src="resources/js/datatablesUtil.js"></script>
-<script type="text/javascript">
-    var ajaxUrl = 'ajax/profile/meals/';
-    var datatableApi;
-
-    function updateTable() {
-        $.ajax({
-            type: "POST",
-            url: ajaxUrl + 'filter',
-            data: $('#filter').serialize(),
-            success: updateTableByData
-        });
-    }
-
-    $(function () {
-        datatableApi = $('#datatable').DataTable({
-            "paging": false,
-            "info": true,
-            "columns": [
-                {
-                    "data": "dateTime"
-                },
-                {
-                    "data": "description"
-                },
-                {
-                    "data": "calories"
-                },
-                {
-                    "defaultContent": "<fmt:message key="common.update"/>",
-                    "orderable": false
-                },
-                {
-                    "defaultContent": "<fmt:message key="common.delete"/>",
-                    "orderable": false
-                }
-            ],
-            "order": [
-                [
-                    0,
-                    "desc"
-                ]
-            ]
-        });
-        makeEditable();
-    });
-</script>
+<script type="text/javascript" src="resources/js/mealDatatables.js"></script>
 </html>

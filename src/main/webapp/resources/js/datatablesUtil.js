@@ -14,6 +14,7 @@ function add(add_title) {
 }
 
 function updateRow(id) {
+    debugger;
     $('#modalTitle').html(edit_title);
     $.get(ajaxUrl + id, function (data) {
         console.log(data);
@@ -55,6 +56,7 @@ function updateTableByData(data) {
 }
 
 function save() {
+    debugger;
     $.ajax({
         type: "POST",
         url: ajaxUrl,

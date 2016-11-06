@@ -1,4 +1,5 @@
 -- http://stackoverflow.com/questions/13223820/postgresql-delete-all-content
+--TRUNCATE SCHEMA public AND COMMIT;
 TRUNCATE users CASCADE;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
