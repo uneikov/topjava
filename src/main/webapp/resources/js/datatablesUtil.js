@@ -7,20 +7,17 @@ function makeEditable() {
     });
 }
 
-function add(add_title) {
+function add() {
     $('#modalTitle').html(add_title);
     form.find(":input").val("");
     $('#editRow').modal();
 }
 
 function updateRow(id) {
-    debugger;
     $('#modalTitle').html(edit_title);
     $.get(ajaxUrl + id, function (data) {
         console.log(data);
         $.each(data, function (key, value) {
-            console.log(key, value);
-            debugger;
             form.find("input[name='" + key + "']").val(value);
         });
         $('#editRow').modal();

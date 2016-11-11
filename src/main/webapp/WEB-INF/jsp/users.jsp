@@ -3,9 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html>
+<head>
 <jsp:include page="fragments/headTag.jsp"/>
+<jsp:include page="fragments/i18nTag.jsp"/>
 <link rel="stylesheet" href="webjars/datatables/1.10.12/css/dataTables.bootstrap.min.css">
-
+</head>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
@@ -83,11 +85,8 @@
 </div>
 </body>
 <script type="text/javascript">
-var i18n = [];
-    <c:forEach var='key' items='<%=new String[]{"common.update","common.delete","common.deleted","common.saved","common.enabled","common.disabled","common.failed"}%>'>
-i18n['${key}'] = '<fmt:message key="${key}"/>';
-    </c:forEach>
-var edit_title ='<fmt:message key="users.edit"/>';
+    var edit_title ='<fmt:message key="users.edit"/>';
+    var add_title ='<fmt:message key="users.add"/>';
 </script>
 <script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
