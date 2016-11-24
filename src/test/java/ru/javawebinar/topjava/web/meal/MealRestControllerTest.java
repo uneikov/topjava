@@ -52,6 +52,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
     public void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + ADMIN_MEAL_ID)
                 .with(userHttpBasic(USER)))
+                .andDo(print())
                 .andExpect(status().isNotFound());
     }
 

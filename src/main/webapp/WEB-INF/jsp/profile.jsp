@@ -47,6 +47,13 @@
                             <button type="submit" class="btn btn-primary">${saveButton}</button>
                         </div>
                     </div>
+
+                    <div class="error-info">
+                        <c:if test="${error}">
+                          <h5 class="error" ><fmt:message key="users.duplicate"/></h5>
+                        </c:if>
+                    </div>
+
                 </form:form>
             </div>
         </div>

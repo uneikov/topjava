@@ -5,9 +5,9 @@ package ru.javawebinar.topjava.util.exception;
  * Date: 19.08.2014
  */
 public class ErrorInfo {
-    public final String url;
-    public final String cause;
-    public final String detail;
+    private final String url;
+    private final String cause;
+    private final String detail;
 
     public ErrorInfo(CharSequence url, Throwable ex) {
         this.url = url.toString();

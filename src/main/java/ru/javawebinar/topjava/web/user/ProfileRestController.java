@@ -25,6 +25,7 @@ public class ProfileRestController extends AbstractUserController {
         super.delete(AuthorizedUser.id());
     }
 
+    @Override
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void update(@RequestBody UserTo userTo) {
         userTo.setId(AuthorizedUser.id());

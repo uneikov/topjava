@@ -3,6 +3,7 @@ var form;
 function makeEditable() {
     form = $('#detailsForm');
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
+        debugger;
         failNoty(event, jqXHR, options, jsExc);
     });
 
@@ -97,6 +98,8 @@ function successNoty(key) {
 function failNoty(event, jqXHR, options, jsExc) {
     closeNoty();
     var errorInfo = $.parseJSON(jqXHR.responseText);
+    console.log("Ашипка: " + errorInfo);
+    debugger;
     failedNote = noty({
         text: i18n['common.failed'] + ': ' + jqXHR.statusText + "<br>"+ errorInfo.cause + "<br>" + errorInfo.detail,
         type: 'error',

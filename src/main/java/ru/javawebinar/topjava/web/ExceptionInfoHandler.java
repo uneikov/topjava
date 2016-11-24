@@ -6,7 +6,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.util.exception.BadRequestException;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ControllerAdvice(annotations = RestController.class)
 public class ExceptionInfoHandler {
-    Logger LOG = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+    private Logger LOG = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
@@ -35,8 +37,25 @@ public class ExceptionInfoHandler {
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         return logAndGetErrorInfo(req, e, true);
     }
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    // ---------------------= HW10.1 =-----------------------
+    @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseBody
+    @Order(Ordered.HIGHEST_PRECEDENCE+2)
+    public ErrorInfo handleBody(HttpServletRequest req, BadRequestException e) {
+        return logAndGetErrorInfo(req, e, false);
+    }
+    // ---------------------= HW10.2 =-----------------------
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)  //406
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    @Order(Ordered.HIGHEST_PRECEDENCE+3)
+    public ErrorInfo handleRestRequest(HttpServletRequest req, MethodArgumentNotValidException e) {
+        return logAndGetErrorInfo(req, e, false);
+        //parseErrors(error.getBindingResult());
+    }
+    //-------------------------------------------------------
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
     @ExceptionHandler(Exception.class)
     @ResponseBody
     @Order(Ordered.LOWEST_PRECEDENCE)
