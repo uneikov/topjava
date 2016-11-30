@@ -38,7 +38,7 @@ public class AdminRestControllerTest extends AbstractControllerTest {
     public void testGetNotFound() throws Exception {
         mockMvc.perform(get(REST_URL + 1)
                 .with(TestUtil.userHttpBasic(ADMIN)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
 
@@ -64,7 +64,7 @@ public class AdminRestControllerTest extends AbstractControllerTest {
     public void testDeleteNotFound() throws Exception {
         mockMvc.perform(delete(REST_URL + 1)
                 .with(TestUtil.userHttpBasic(ADMIN)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isUnprocessableEntity())
                 .andDo(print());
     }
 
@@ -101,7 +101,8 @@ public class AdminRestControllerTest extends AbstractControllerTest {
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(expected))).andExpect(status().isCreated());
+                .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isCreated());
 
         User returned = MATCHER.fromJsonAction(action);
         expected.setId(returned.getId());
