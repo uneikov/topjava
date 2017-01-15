@@ -25,18 +25,21 @@ public class AdminAjaxController extends AbstractUserController {
     @Autowired
     private MessageSource messageSource;
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(View.UI.class)
     public List<User> getAll() {
         return super.getAll();
     }
 
+    @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(View.UI.class)
     public User get(@PathVariable("id") int id) {
         return super.get(id);
     }
 
+    @Override
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id) {
         super.delete(id);

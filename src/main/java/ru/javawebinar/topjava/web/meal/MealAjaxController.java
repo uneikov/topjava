@@ -28,17 +28,19 @@ public class MealAjaxController extends AbstractMealController {
     }
 */
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> getAll() {
         return super.getAll();
     }
 
+    @Override
     @GetMapping(value = "/{id}")
     public Meal get(@PathVariable("id") int id) {
         return super.get(id);
     }
 
-
+    @Override
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
@@ -53,6 +55,7 @@ public class MealAjaxController extends AbstractMealController {
         }
     }
 
+    @Override
     @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> getBetween(
             @RequestParam(value = "startDate", required = false) LocalDate startDate,
